@@ -1,3 +1,7 @@
 /venv/
+/venv312/
 /ISO10711.asn
 /ISO14927-1.asn
+.hypothesis/
+__pycache__/
+.pytest_cache/

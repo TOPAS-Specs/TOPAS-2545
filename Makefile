@@ -21,14 +21,18 @@
 # SOFTWARE.
 
 
-#ASNFILES=Annex_A_10711_v2.0.asn ISO14927-1.asn
-ASNFILES=DataPacketStructuresV3MarkRetallack.asn
+ASNFILES=Annex_A_10711_v3.0.asn
 
-SRC_JSONFILE=detection_long.json
+SRC_JSONFILE=detection_v3.json
+
+# Python interpreter used by sub-Makefiles. Override on the command line if needed
+# (e.g. `make PYTHON=python3.12 run_python`).
+PYTHON=python3.11
 
 
 export ASNFILES
 export SRC_JSONFILE
+export PYTHON
 
 all: 
 
