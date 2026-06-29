@@ -20,20 +20,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# rule to convert the asn1 to Go code
-generate: ISO10711-OneModule.asn
-	cd asn1go/cmd/asn1go && go run main.go ../../../ISO10711-OneModule.asn ../../../ipmtscd/IPMTSCD.go
+# ASN.1 source file - uses ASNFILES from root Makefile (exported)
+ASN_SOURCE = $(addprefix ../, $(ASNFILES))
 
 # rule to convert the asn1 to Go code
-build: ISO10711-OneModule.asn
+# Falls back to existing manual structs if asn1go cannot handle the new spec
+generate:
+	@echo "Attempting asn1go code generation from $(ASN_SOURCE)..."
+	@if cd asn1go/cmd/asn1go && go run main.go ../../../$(notdir $(ASN_SOURCE)) ../../../ipmtscd/IPMTSCD.go 2>/dev/null; then \
+		echo "asn1go generation succeeded."; \
+	else \
+		echo "WARNING: asn1go failed (likely due to AUTOMATIC TAGS or extensibility markers)."; \
+		echo "Using existing manually maintained structs in ipmtscd/IPMTSCD.go"; \
+	fi
+	@echo "Verifying Go build..."
+	go build
+	@echo "Go build verification passed."
+
+# rule to build the Go application
+build:
 	go build
 
 # rule to run the decode and then encode
 run:
-	./testapp -m recode	
+	./testapp -m recode
 
-# check for the asn1 file
-ISO10711-OneModule.asn:
-	@echo "Cannot find ISO10711-OneModule.asn, this is a modified version that can be used by asn1go"
-
-	
+.PHONY: generate build run

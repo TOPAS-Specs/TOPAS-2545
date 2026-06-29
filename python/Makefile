@@ -20,15 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# Python interpreter — exported by the root Makefile. Default to python3.11
+# if invoked directly without the parent Makefile.
+PYTHON ?= python3.11
+
 ../python-detector.ber: ../${SRC_JSONFILE}
-	@python3 -m venv venv
-	@. venv/bin/activate && pip3 install -r requirements.txt
-	@. venv/bin/activate && python3 det_encoder.py ../${SRC_JSONFILE} $(addprefix ../, ${ASNFILES}) 
+	@${PYTHON} -m venv venv
+	@. venv/bin/activate && pip install -r requirements.txt
+	@. venv/bin/activate && python det_encoder.py ../${SRC_JSONFILE} $(addprefix ../, ${ASNFILES}) 
 	
 
 # rule to test the different files generated
 test:
-	@python3 -m venv venv
-	@. venv/bin/activate && pip3 install -r requirements.txt
-	@. venv/bin/activate && python3 test.py ../${SRC_JSONFILE} $(addprefix ../, ${ASNFILES}) 
+	@${PYTHON} -m venv venv
+	@. venv/bin/activate && pip install -r requirements.txt
+	@. venv/bin/activate && python test.py ../${SRC_JSONFILE} $(addprefix ../, ${ASNFILES}) 
 
