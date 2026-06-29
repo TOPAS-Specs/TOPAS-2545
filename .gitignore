@@ -3,3 +3,5 @@
 /Annex_A_10711_v2.0.asn
 /Annex_A_10711_v3.0.asn
 /.hypothesis
+.venv*/
+python/venv/

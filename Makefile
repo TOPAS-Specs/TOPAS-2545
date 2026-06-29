@@ -26,8 +26,8 @@ ASNFILES=Annex_A_10711_v3.0.asn
 SRC_JSONFILE=detection_v3.json
 
 # Python interpreter used by sub-Makefiles. Override on the command line if needed
-# (e.g. `make PYTHON=python3.12 run_python`).
-PYTHON=python3.11
+# (e.g. `make PYTHON=python3.13 run_python`).
+PYTHON=python3.13
 
 
 export ASNFILES
