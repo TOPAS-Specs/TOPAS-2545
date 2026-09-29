@@ -1,0 +1,277 @@
+ISO-10711-IpmstscdData DEFINITIONS AUTOMATIC TAGS ::= BEGIN
+
+IpmstscdData ::= SEQUENCE{
+  detectorControllerInfo       	        DetectorControllerInfo   		            OPTIONAL,
+  detectorInfo                          SEQUENCE OF DetectorInfoSeq 		OPTIONAL
+    -- detector information list
+}
+
+DetectorControllerInfo ::= SEQUENCE {
+  detectorControllerIndex               INTEGER(0..255),
+  detectorControllerTimeLocation       	GeneralTimeLocationCore                 OPTIONAL
+}
+
+GeneralTimeLocationCore ::= SEQUENCE {
+  currentTime         						Time,
+  locationLongitude   					  INTEGER(-180000000..180000000) 	  OPTIONAL,
+  locationLatitude    						INTEGER(-90000000..90000000) 		  OPTIONAL,
+  locationElevation   						INTEGER(-8192..57344) 			      OPTIONAL
+}
+
+DetectorInfoSeq ::= SEQUENCE {
+  physicalDetectorIndex			INTEGER(0..255),
+  -- Physical detector index  
+  infoType		ENUMERATED {
+    occupancyTypeDetector   (1),
+    imageTypeDetector       (2),
+    idBaseTypeDetector      (3),
+    ...
+    },
+  -- Information type
+  detectionInfo  CHOICE {
+    occupancyBasedDetectionData    		      [1]         OccupancyBasedDetectionData,
+    imageProcessingBasedDetectionData       [2]         ImageProcessingBasedDetectionData,
+    identificationBasedDetectionData        [3]         IdentificationBasedDetectionData,
+    occupancyTypeDetectionInfoType2    	    [4]         OccupancyBasedDetectionDataType2,
+    imageProcessingBasedDetectionDataType2  [5]         ImageProcessingBasedDetectionDataType2,
+    identificationBasedDetectionDataType2   [6]         IdentificationBasedDetectionDataType2,
+    ...
+    },
+  -- Detection information
+  detectorTimeLocation				                          GeneralTimeLocationCore 		OPTIONAL
+  -- Detector's time-location
+}
+
+OccupancyBasedDetectionData ::= SEQUENCE {
+  occupancyDataDuration 			    	INTEGER 				OPTIONAL,
+  -- duration of detection data collection
+  occupancyState 			        			BOOLEAN,
+  -- current state of occupancy(BOOLEAN)
+  occupancyStateDuration 				    INTEGER(0..65535),
+  -- current duration of occupancy (msec)
+  occupancyPreviousStateDuration 		INTEGER(0..65535),
+  -- duration of previous state of occupancy
+  -- (if currently occupancy state, then non-occupancy) (msec)
+  occupancyRate 						        REAL,
+  -- average occupancy rate of detection period
+  speed 						                REAL            OPTIONAL,
+  -- average speed of detection period
+  volume 						                INTEGER,
+  -- REAL Value conforms to ASCII string format for representing real number in ISO/IEC 8825-1
+  -- (+/-##.#e+/-##), however 0.1kph unit 10 digit may be better in terms of flexibility
+  occupancyNonOccupancyHistory			SEQUENCE OF  OccupancyNonOccupancyHistory OPTIONAL,
+  -- occupancy/ non-occupancy pair history list of the occupancy state
+  errorState ENUMERATED {
+    openCircuit         						(1),  -- open circuit of detector header or Feeder (Open)
+    shortCircuit        						(2),  -- short circuit of detector header or Feeder (Short)
+    occupancyError      					  (3),  -- minimum occupancy error
+                                          -- (lower than predefined parameter)
+    nonOccupancyError  					    (4),  -- minimum non-occupancy error
+                                          -- (lower than predefined parameter)
+    volumeError         		        (5),  -- traffic volume error
+                                          -- (exceeds predefined saturated traffic flow rate)
+    parameterInvalid    	          (6),  -- invalid parameter
+    managementNeeded                (7)   -- error that needs maintenance
+  } OPTIONAL,
+    -- error state information
+  userData 						              OCTET STRING 		  OPTIONAL,
+  targetType 					              INTEGER(1..255) 	OPTIONAL,
+  -- The classification of targets
+  directionDiscrimination 		      BOOLEAN 		      OPTIONAL
+  -- Direction of the target vehicle approaching to an intersection (TRUE) or leaving from an intersection (FALSE).
+}
+
+ImageProcessingBasedDetectionData ::= SEQUENCE {
+    dataDuration            			              INTEGER         OPTIONAL, 
+    --duration for collecting current data (seconds)
+    volumeQuantity          			              INTEGER,
+    --queue length of the detected lane during the detection (m) mandatory
+    queueLength             			              INTEGER 				OPTIONAL,
+    --Total traffic volume of the detection lane during the detection (number of vehicles)
+    occupancyRate    		                REAL 					  OPTIONAL,
+    --average occupancy rate of the detected lane during the detection (%) optional
+    speedQuantity            			              REAL 					  OPTIONAL,
+    --average speed of the detected lane during the detection (km/h) optional
+    occupancyNonOccupancyHistory         			  OccupancyNonOccupancyHistory		OPTIONAL,
+    --total traffic volume of the detection lane during the detection time (veh)
+    errorState              ENUMERATED {
+      deviceFail				        (1),             	-- image device failure
+      unstableUtility			      (2),           		-- image failure by the structure vibration and malfuction
+      connectionFail			      (3),          		-- connection failure with image processor
+      imageProcessingFail		    (4),           		-- image processing failure
+      parameterInvalid		      (5),        	  	-- invalid parameter
+      volumeError				        (6),             	-- no configuration data from detector controller
+      managementNeeded		      (7),        		  -- error that needs maintenance
+      ...
+      } OPTIONAL,
+    userData                		OCTET STRING 		OPTIONAL
+}
+
+IdentificationBasedDetectionData ::= SEQUENCE {
+    sequenceNumber    			INTEGER(0..255),
+    -- verification sequential number for data collection (record ID number for transmission)   
+    deviceType        				ENUMERATED {
+      infrared                  (1),
+      radioFrequency            (2),
+      vehicleDetectionSystems   (3),
+      magnetics                 (4),
+      barCodeScanner            (5),
+      tagScanner                (6),
+      other                     (7),
+      ...
+    } OPTIONAL,
+    -- Communication device TYPE (IR:0x10, RF:0x20, VDS: 0x30, MCD: 0x40)
+    vehicleId      			        OCTET STRING,
+    -- Vehicle ID
+    vehicleType           			INTEGER         OPTIONAL,
+    -- Vehicle classification codes by the vehicle type or OBU
+    vehicleUse            			INTEGER         OPTIONAL,
+    -- Vehicle usage and property codes by the vehicle type or OBU
+    detectionLane         			INTEGER(1..8)   OPTIONAL,
+    -- detection lane classification (from the curbside of the road1-8)
+    detectionLaneMedian   		  INTEGER(1..8)   OPTIONAL,
+    -- detection lane classification (from the median of the road 1-8)
+    detectionSpeed        			REAL            OPTIONAL,
+    -- vehicle speed(km/h)
+    occupancy             			INTEGER         OPTIONAL,
+    -- occupancy duration by detector(ms)
+    errorState            ENUMERATED {
+        rSEFail		            	(1),      -- malfunction of wireless communication or scanning equipment
+        rSEConnectionFail     	(2),      -- connection failure of wireless communication equipment or scanning equipment
+        wirelessFail            (3),      -- wireless communication failure
+        unstableUtility         (4),      -- data collection error by defective structure
+        managementNeeded        (5)      -- malfunction that needs manual repair
+    } OPTIONAL,
+    -- malfunction code for this record
+    tagInfo               			OCTET STRING 		OPTIONAL,
+    -- Tag identification data from the OBU of the vehicle(tag data block)
+    userData              			OCTET STRING 		OPTIONAL
+}
+
+OccupancyNonOccupancyHistory ::= SEQUENCE {
+    occupancyTimes      		INTEGER, --msec
+    nonOccupancyTimes   		INTEGER --msec
+}
+
+Time ::= SEQUENCE 
+{
+  year          			INTEGER (-32768..32767) OPTIONAL,
+  -- defaults to current year unless otherwise specified
+  month          		INTEGER (1..12)         OPTIONAL,
+  -- defaults to current month unless otherwise specified
+  day           			INTEGER (1..31)         OPTIONAL,
+  -- defaults to current day unless otherwise specified
+  hour          		  INTEGER (0..23)         DEFAULT 0,
+  minute        		  INTEGER (0..59)         DEFAULT 0,
+  second         		  INTEGER (0..60)         DEFAULT 0,
+  secondFractions     CHOICE {
+    deciSeconds       	INTEGER (0..9),
+    centiSeconds       	INTEGER (0..99),
+    milliseconds       	INTEGER (0..999),
+    ...
+  },
+  timeZone          SEQUENCE    -- defaults to UTC
+  {
+    hour  			INTEGER (-13..13)   DEFAULT 0,
+    minute 			INTEGER (0..59)     DEFAULT 0
+  }OPTIONAL 
+}
+
+IdentificationBasedDetectionDataType2 ::= SEQUENCE {
+  accumulativeDetection       		  SEQUENCE SIZE(1..48)  OF  AccumulativeDetectionSeq,    
+  passingVehicleTimeSeries     		  SEQUENCE SIZE(1..48)  OF  PassingVehicleTimeSeriesSeq,
+  vehicleSpeed           	      	  SEQUENCE SIZE(0..160) OF  VehicleSpeedSeq,
+  specificVehicleDetection		      OCTET STRING(SIZE(6)),
+  vehicleIdentification             SEQUENCE OF VehicleIdentificationSeq,
+  detectorStatus                    BIT STRING	{
+		processingFailure (0), 
+		operatingFailure  (1) 
+	} (SIZE(1..8))	OPTIONAL
+}
+
+VehicleIdentificationSeq ::= SEQUENCE {
+  vehicleID                     OCTET STRING,
+  data                        OCTET STRING OPTIONAL
+}
+
+ImageProcessingBasedDetectionDataType2  ::= SEQUENCE {
+  accumulativeDetection       		  SEQUENCE SIZE(1..48)  OF  AccumulativeDetectionSeq,     
+  passingVehicleTimeSeries     		  SEQUENCE SIZE(1..48)  OF  PassingVehicleTimeSeriesSeq,
+  vehicleSpeed           	      	  SEQUENCE SIZE(0..160) OF  VehicleSpeedSeq,
+  specificVehicleDetection		      OCTET STRING(SIZE(6)),
+  congestionInfo                    SEQUENCE {
+    congestionLength1       		      INTEGER(0..150),
+    vehicleStartPosition1   		      INTEGER(0..150),
+    congestionLength2       		      INTEGER(0..150),
+    vehicleStartPosition2   		      INTEGER(0..150)
+  },
+  -- Queue length and start position info
+  directionalTrafficVolume          SEQUENCE SIZE(1..32) OF DirectionalTrafficVolumeSeq,
+  detectorStatus                    BIT STRING	{
+		processingFailure (0), 
+		operatingFailure  (1) 
+	} (SIZE(1..8))	OPTIONAL
+}
+
+DirectionalTrafficVolumeSeq ::= SEQUENCE {
+  directionNumber    	INTEGER(1..32),
+  detectionStatus     ENUMERATED { 
+    normal			 	(0), 
+    failure			  (1), 
+    dataInvalid	  (2) 
+  } OPTIONAL,
+  directionDensity    INTEGER(0..65535)
+}
+
+OccupancyBasedDetectionDataType2 ::= SEQUENCE {
+  accumulativeDetection       		  SEQUENCE SIZE(1..48)  OF  AccumulativeDetectionSeq,    
+  passingVehicleTimeSeries     		  SEQUENCE SIZE(1..48)  OF  PassingVehicleTimeSeriesSeq,
+  vehicleSpeed           	      	  SEQUENCE SIZE(0..160) OF  VehicleSpeedSeq,
+  specificVehicleDetection		      OCTET STRING(SIZE(6)),
+  detectorStatus                    BIT STRING	{
+		processingFailure (0), 
+		operatingFailure  (1) 
+	} (SIZE(1..8))	OPTIONAL
+}
+
+AccumulativeDetectionSeq::= SEQUENCE {
+  detectorNumber            INTEGER(1..48),
+  detectionStatus           ENUMERATED { 
+    normal	                     	(0), 
+    failure			                  (1), 
+    dataInvalid		                (2)
+  } OPTIONAL,
+    density            			INTEGER(0..65535),
+    occupancy           		INTEGER(0..65535),
+    detectorPulseError   		INTEGER(0..65535)
+}
+
+PassingVehicleTimeSeriesSeq ::= SEQUENCE {
+  detectorNumber       			INTEGER(1..48),
+  detectionStatus    		    ENUMERATED { 
+    normal  	    	          (0), 
+    failure  		              (1), 
+    dataInvalid		            (2)
+  } OPTIONAL,
+  vehiclePassageHistory     OCTET STRING(SIZE(8))
+}   
+
+VehicleSpeedSeq ::= SEQUENCE {
+  detectorNumber        INTEGER(1..48),
+  vehicleType         	ENUMERATED { 
+    fourBus              			(1), 
+    fourLargeSizeTruck      	(2),
+    fourSmallSizeTruck   	    (4), 
+    fourElse             			(8),
+    twoLargeSizeVehicle  	    (16), 
+    twoElse             			(32) 
+  },
+  velocity 					INTEGER(0..127)
+}
+
+
+
+
+
+
+END
