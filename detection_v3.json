@@ -1,0 +1,41 @@
+{
+  "detectorControllerInfo": {
+    "detectorControllerIndex": 1
+  },
+  "detectorInfo": [
+    {
+      "physicalDetectorIndex": 0,
+      "infoType": "occupancyTypeDetector",
+      "detectionInfo": {
+        "occupancyBasedDetectionData": {
+          "occupancyDataDuration": 900,
+          "occupancyState": true,
+          "occupancyStateDuration": 2000,
+          "occupancyPreviousStateDuration": 3300,
+          "occupancyRate": 10.8,
+          "speed": 10.3,
+          "volume": 3,
+          "targetType": 7,
+          "directionDiscrimination": true
+        }
+      }
+    },
+    {
+      "physicalDetectorIndex": 1,
+      "infoType": "occupancyTypeDetector",
+      "detectionInfo": {
+        "occupancyBasedDetectionData": {
+          "occupancyDataDuration": 900,
+          "occupancyState": false,
+          "occupancyStateDuration": 6000,
+          "occupancyPreviousStateDuration": 5000,
+          "occupancyRate": 30.8,
+          "speed": 10.3,
+          "volume": 30,
+          "targetType": 1,
+          "directionDiscrimination": true
+        }
+      }
+    }
+  ]
+}

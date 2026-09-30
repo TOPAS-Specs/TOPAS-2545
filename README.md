@@ -7,6 +7,9 @@ The purpose of this repository is to store:
 * Example code implementations of the TOPAS 2545 profile specification standard
 * Documentation and Detector Profile specifications.
 
+The official released standard (ISO 10711 ed.2) is published by ISO and can be
+obtained here: [https://standards.iso.org/iso/10711/ed-2/en/](https://standards.iso.org/iso/10711/ed-2/en/)
+
 
 **!!!Note that this repository is under construction and is not yet ready for general use!!!**
 
@@ -22,7 +25,9 @@ The purpose of this repository is to store:
 
 # Description
 
-The example contains a C, golang and python implementation of the ISO10711. It does not contain the actual ISO10711 ASN as this is not currently distributable. 
+The example contains a C, golang and python implementation of the ISO10711. The
+released ISO 10711 ed.2 message-set ASN.1 is now published and is included in
+this repository as `Annex_A_10711_v3.0.asn`.
 
 # Requirements
 

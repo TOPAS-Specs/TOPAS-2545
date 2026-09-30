@@ -1,40 +1,40 @@
 ASN_MODULE_SOURCES=	\
-	IPMSTSCDData.c	\
-	DetectorControllerInformation.c	\
+	IpmstscdData.c	\
+	DetectorControllerInfo.c	\
 	GeneralTimeLocationCore.c	\
-	IpmstscdDetDataSeq.c	\
-	IpmstscdOccTypeDetectorInformation.c	\
-	IpmstscdImageTypeDetectorInformation.c	\
-	IpmstscdIDTypeDetectorInformation.c	\
-	IpmstscdOccNoccHistory.c	\
+	DetectorInfoSeq.c	\
+	OccupancyBasedDetectionData.c	\
+	ImageProcessingBasedDetectionData.c	\
+	IdentificationBasedDetectionData.c	\
+	OccupancyNonOccupancyHistory.c	\
 	Time.c	\
-	IpmstscdIDTypeDetectorInformationType2.c	\
-	VehicleInfoSeq.c	\
-	IpmstscdImageTypeDetectorInformationType2.c	\
-	DirectionDensitySeq.c	\
-	IpmstscdOccTypeDetectorInformationType2.c	\
-	Det-AccmulatedSeq.c	\
-	Det-SerialInfoSeq.c	\
-	Det-VelocitySeq.c
+	IdentificationBasedDetectionDataType2.c	\
+	VehicleIdentificationSeq.c	\
+	ImageProcessingBasedDetectionDataType2.c	\
+	DirectionalTrafficVolumeSeq.c	\
+	OccupancyBasedDetectionDataType2.c	\
+	AccumulativeDetectionSeq.c	\
+	PassingVehicleTimeSeriesSeq.c	\
+	VehicleSpeedSeq.c
 
 ASN_MODULE_HEADERS=	\
-	IPMSTSCDData.h	\
-	DetectorControllerInformation.h	\
+	IpmstscdData.h	\
+	DetectorControllerInfo.h	\
 	GeneralTimeLocationCore.h	\
-	IpmstscdDetDataSeq.h	\
-	IpmstscdOccTypeDetectorInformation.h	\
-	IpmstscdImageTypeDetectorInformation.h	\
-	IpmstscdIDTypeDetectorInformation.h	\
-	IpmstscdOccNoccHistory.h	\
+	DetectorInfoSeq.h	\
+	OccupancyBasedDetectionData.h	\
+	ImageProcessingBasedDetectionData.h	\
+	IdentificationBasedDetectionData.h	\
+	OccupancyNonOccupancyHistory.h	\
 	Time.h	\
-	IpmstscdIDTypeDetectorInformationType2.h	\
-	VehicleInfoSeq.h	\
-	IpmstscdImageTypeDetectorInformationType2.h	\
-	DirectionDensitySeq.h	\
-	IpmstscdOccTypeDetectorInformationType2.h	\
-	Det-AccmulatedSeq.h	\
-	Det-SerialInfoSeq.h	\
-	Det-VelocitySeq.h
+	IdentificationBasedDetectionDataType2.h	\
+	VehicleIdentificationSeq.h	\
+	ImageProcessingBasedDetectionDataType2.h	\
+	DirectionalTrafficVolumeSeq.h	\
+	OccupancyBasedDetectionDataType2.h	\
+	AccumulativeDetectionSeq.h	\
+	PassingVehicleTimeSeriesSeq.h	\
+	VehicleSpeedSeq.h
 
 ASN_MODULE_HEADERS+=BOOLEAN.h
 ASN_MODULE_SOURCES+=BOOLEAN.c
@@ -105,7 +105,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 # This file may be used as an input for make(3)
 # Remove the lines below to convert it into a pure .am file
 TARGET = converter-sample
-CFLAGS += -I. -DPDU=IPMSTSCDData
+CFLAGS += -I. -DPDU=IpmstscdData
 OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
 
 LIBS=-lm

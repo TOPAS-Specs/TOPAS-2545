@@ -40,7 +40,9 @@ def ordered(obj):
     if isinstance(obj, dict):
         return sorted((k, ordered(v)) for k, v in obj.items())
     if isinstance(obj, list):
-        return sorted(ordered(x) for x in obj)
+        return [ordered(x) for x in obj]
+    if isinstance(obj, tuple):
+        return tuple(ordered(x) for x in obj)
     else:
         return obj
 
@@ -55,10 +57,10 @@ txtdata = file.read()
 #print("Src json: "+str(txtdata))
 
 # decode to internal format
-decodedMessage_reference = jerEncoded.decode("IPMSTSCDData", bytearray(txtdata, encoding='utf8'))
+decodedMessage_reference = jerEncoded.decode("IpmstscdData", bytearray(txtdata, encoding='utf8'))
 
 # and re-encode 
-reEncoded = jerEncoded.encode("IPMSTSCDData", decodedMessage_reference).decode("utf-8") 
+reEncoded = jerEncoded.encode("IpmstscdData", decodedMessage_reference).decode("utf-8") 
                               
 #print("reEncoded json: "+str(reEncoded))
 
@@ -109,7 +111,7 @@ for curTest in tests:
         txtdata=bytearray(txtdata, encoding='utf8') 
     
     # decode to internal format
-    decodedMessage_c = decoder.decode("IPMSTSCDData", txtdata)
+    decodedMessage_c = decoder.decode("IpmstscdData", txtdata)
     
     print(str(decodedMessage_c))
     

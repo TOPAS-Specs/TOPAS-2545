@@ -5,14 +5,13 @@
  * 	`asn1c -fcompound-names`
  */
 
-#ifndef	_GeneralTimeLocationCore_H_
-#define	_GeneralTimeLocationCore_H_
+#ifndef	_OccupancyNonOccupancyHistory_H_
+#define	_OccupancyNonOccupancyHistory_H_
 
 
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "Time.h"
 #include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 
@@ -20,23 +19,21 @@
 extern "C" {
 #endif
 
-/* GeneralTimeLocationCore */
-typedef struct GeneralTimeLocationCore {
-	Time_t	 currentTime;
-	long	*locationLongitude	/* OPTIONAL */;
-	long	*locationLatitude	/* OPTIONAL */;
-	long	*locationElevation	/* OPTIONAL */;
+/* OccupancyNonOccupancyHistory */
+typedef struct OccupancyNonOccupancyHistory {
+	long	 occupancyTimes;
+	long	 nonOccupancyTimes;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} GeneralTimeLocationCore_t;
+} OccupancyNonOccupancyHistory_t;
 
 /* Implementation */
-extern asn_TYPE_descriptor_t asn_DEF_GeneralTimeLocationCore;
+extern asn_TYPE_descriptor_t asn_DEF_OccupancyNonOccupancyHistory;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* _GeneralTimeLocationCore_H_ */
+#endif	/* _OccupancyNonOccupancyHistory_H_ */
 #include <asn_internal.h>
