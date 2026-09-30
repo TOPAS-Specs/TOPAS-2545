@@ -21,11 +21,11 @@
 # SOFTWARE.
 
 
-FROM debian:testing
+FROM debian:stable
 
 RUN apt-get update && \
         apt-get install -y  \
-            asn1c make golang python3 python3-venv python3-pip
+            asn1c make golang gcc libc6-dev python3 python3-venv python3-pip
 
 WORKDIR /build 
 
